@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/margin"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_sharefile_user_by"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="tv_sharefile_user_by"
+            android:textSize="@dimen/text_size_default" />
+
+        <TextView
+            android:id="@+id/tv_sharefile_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_sharefile_user_by"
+            android:paddingLeft="@dimen/normal_space"
+            android:paddingTop="@dimen/normal_space"
+            android:text="tv_sharefile_time"
+            android:textSize="@dimen/text_size_small" />
+
+        <TextView
+            android:id="@+id/tv_sharefile_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_sharefile_time"
+            android:text="tv_sharefile_title"
+            android:textSize="@dimen/text_size_big" />
+
+        <ImageView
+            android:id="@+id/iv_sharefile_type"
+            android:layout_alignParentRight="true"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_below="@+id/tv_sharefile_title" />
+
+        <TextView
+            android:id="@+id/tv_sharefile_download_size_and_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/iv_sharefile_type"
+            android:paddingTop="10dp"
+            android:text="tv_sharefile_download_size_and_num" />
+    </RelativeLayout>
+
+</LinearLayout>

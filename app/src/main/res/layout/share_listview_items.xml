@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp" >
+
+        <ImageView
+            android:id="@+id/tv_share_listview_user_holder"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="6dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_share_listview_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="13dp"
+            android:text="用户名"
+            android:textColor="#33ccff"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_share_listview_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_share_listview_user_name"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="1dp"
+            android:text="时间"
+            android:textColor="#B6B6B6"
+            android:textSize="9sp" />
+
+        <TextView
+            android:id="@+id/tv_share_listview_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_share_listview_time"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:text="标题"
+            android:textColor="#000000" />
+
+        <ImageView
+            android:id="@+id/tv_share_listview_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/normal_selector"
+            android:src="@mipmap/ic_btn_share"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_share_listview_file_type"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="6dp"
+            android:background="@drawable/normal_selector" />
+
+        <TextView
+            android:id="@+id/tv_share_listview_file_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/iv_share_listview_file_type"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="2dp"
+            android:text="文件大小" />
+
+        <TextView
+            android:id="@+id/tv_share_listview_file_download_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tv_share_listview_title"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="2dp"
+            android:text="下载次数" />
+
+        <TextView
+            android:id="@+id/tv_share_listview_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_share_listview_title"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:text="内容"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</LinearLayout>

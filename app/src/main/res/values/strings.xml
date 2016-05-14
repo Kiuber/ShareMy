@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">ShareMy</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_about">关于</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_tel">手机号</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">请先输入手机号</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="update_log_message">Version 1.5（2016.05.08）\n\n\n1.界面全面更新为Material Design（质感）风格\n\n2.加入TabLayout（选项卡）\n\n3.重新全面优化全部代码，删除一些无用的功能\n\n4.更改包名为top.kiuber.sharemy\n\n\nkiuber1127@gmail.com</string>
+    <string name="share_extra_content">ShareMy这个应用不错，推荐一下。获取地址：http://app.mi.com/detail/289957来自@小米应用商店</string>
+    <string name="is_login_message">您还没登录，是否现在登录？</string>
+    <string name="update_log_title">更新日志</string>
+    <string name="update_log_positive">确定</string>
+    <string name="about_title">ShareMy--分享我的分享</string>
+    <string name="about_message">Develop：Kiuber\nMail：kiuber1127@gmail.com\nSina：Kiuber_Z</string>
+    <string name="about_positive">确定</string>
+    <string name="uninstall_old_version_title">提示</string>
+    <string name="uninstall_old_version_message">为了更好的用户的体验，检测到您的手机还存在旧的版本，是否立即卸载</string>
+    <string name="uninstall_old_version_positive">卸载</string>
+    <string name="uninstall_old_version_negative">不了</string>
+    <string name="share_toast_text">正在打开分享</string>
+    <string name="share_choose_title">分享</string>
+    <string name="sign_out_title">是否退出？</string>
+    <string name="sign_out_positive">退出</string>
+    <string name="sign_out_negative">否</string>
+    <string name="action_join">加入QQ群</string>
+    <string name="is_login_negative">不了</string>
+</resources>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1E90FF">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/normal_space"
+            android:text="个人信息"
+            android:textSize="@dimen/title_text_size" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/little_space"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_btn_selector"
+            android:drawableLeft="@mipmap/user_admin_name"
+            android:drawablePadding="@dimen/normal_space"
+            android:drawableRight="@mipmap/arrow_right_normal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/normal_space"
+            android:text="昵称"
+            android:textSize="@dimen/text_size_default" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#33000000" />
+
+        <TextView
+            android:id="@+id/user_zfb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_btn_selector"
+            android:drawableLeft="@mipmap/user_admin_bank_card"
+            android:drawablePadding="@dimen/normal_space"
+            android:drawableRight="@mipmap/arrow_right_normal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/normal_space"
+            android:text="支付宝"
+            android:textSize="@dimen/text_size_default" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#33000000" />
+
+        <TextView
+            android:id="@+id/user_bind_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_btn_selector"
+            android:drawableLeft="@mipmap/user_admin_bind_phone"
+            android:drawablePadding="@dimen/normal_space"
+            android:drawableRight="@mipmap/arrow_right_normal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/normal_space"
+            android:text="已绑定手机号"
+            android:textSize="@dimen/text_size_default" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#33000000" />
+
+        <TextView
+            android:id="@+id/user_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_btn_selector"
+            android:drawableLeft="@mipmap/user_admin_modify_password"
+            android:drawablePadding="@dimen/normal_space"
+            android:drawableRight="@mipmap/arrow_right_normal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/normal_space"
+            android:text="登陆密码"
+            android:textSize="@dimen/text_size_default" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/normal_space"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/tv_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_btn_selector"
+                android:drawableLeft="@mipmap/user_admin_city"
+                android:drawablePadding="@dimen/normal_space"
+                android:drawableRight="@mipmap/arrow_right_normal"
+                android:gravity="center_vertical"
+                android:padding="@dimen/normal_space"
+                android:text="关于"
+                android:textSize="@dimen/text_size_default" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/user_login_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/normal_space"
+            android:layout_marginTop="@dimen/normal_space"
+            android:background="@drawable/login_out_tv_selector"
+            android:gravity="center"
+            android:padding="@dimen/normal_space"
+            android:text="退出登录"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_default" />
+    </LinearLayout>
+
+</LinearLayout>

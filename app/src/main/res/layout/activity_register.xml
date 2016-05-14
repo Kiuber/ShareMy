@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:orientation="vertical"
+        android:padding="@dimen/normal_space" >
+
+        <TextView
+            android:id="@+id/tv_register_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我们已经将验证码"
+            android:textSize="28dp"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/et_register_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_stay_primary_portrait_black_24dp"
+            android:drawablePadding="@dimen/normal_space"
+            android:hint="请输入手机号"
+            android:inputType="phone"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/et_register_verification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/normal_space"
+            android:drawableLeft="@drawable/ic_stay_primary_portrait_black_24dp"
+            android:drawablePadding="@dimen/normal_space"
+            android:hint="请输入验证码"
+            android:inputType="number"
+            android:singleLine="true"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/et_register_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/normal_space"
+            android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQSTUVWXYZ"
+            android:drawableLeft="@drawable/ic_stay_primary_portrait_black_24dp"
+            android:drawablePadding="@dimen/normal_space"
+            android:hint="请输入密码"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/et_register_password_again"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/normal_space"
+            android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQSTUVWXYZ"
+            android:drawableLeft="@drawable/ic_stay_primary_portrait_black_24dp"
+            android:drawablePadding="@dimen/normal_space"
+            android:hint="请再次输入密码"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_register_send_verification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/normal_space"
+            android:text="发送验证码" />
+
+        <Button
+            android:id="@+id/btn_register_sumbit_verification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/normal_space"
+            android:text="提交验证码"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_register_set_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/normal_space"
+            android:text="注册"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal" >
+
+        <TextView
+            android:id="@+id/tv_register_treaty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/normal_space"
+            android:text="注册完成即代表您同意ShareMy用户使用协议"
+            android:textSize="10dp" />
+    </RelativeLayout>
+
+</LinearLayout>

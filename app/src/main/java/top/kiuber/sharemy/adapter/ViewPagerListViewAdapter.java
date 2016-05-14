@@ -48,21 +48,37 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = mInflater.inflate(R.layout.viewpager_listview_items, parent, false);
-        TextView user_by = (TextView) convertView.findViewById(R.id.tv_sharefile_user_by);
-        TextView time = (TextView) convertView.findViewById(R.id.tv_sharefile_time);
-        TextView title = (TextView) convertView.findViewById(R.id.tv_sharefile_title);
-        TextView size_and_download_num = (TextView) convertView.findViewById(R.id.tv_sharefile_download_size_and_num);
-        ImageView type = (ImageView) convertView.findViewById(R.id.iv_sharefile_type);
+        ViewHolder viewHolder = null;
+        if (viewHolder == null) {
+            viewHolder = new ViewHolder();
 
+            convertView = mInflater.inflate(R.layout.viewpager_listview_items, parent, false);
+            viewHolder.mTvShareFileUserBy = (TextView) convertView.findViewById(R.id.tv_sharefile_user_by);
+            viewHolder.mTvShareFileTime = (TextView) convertView.findViewById(R.id.tv_sharefile_time);
+            viewHolder.mTvShareFileTitle = (TextView) convertView.findViewById(R.id.tv_sharefile_title);
+            viewHolder.mTvShareFileSizeAndDownloadNum = (TextView) convertView.findViewById(R.id.tv_sharefile_download_size_and_num);
+            viewHolder.mIvShareFileType = (ImageView) convertView.findViewById(R.id.iv_sharefile_type);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
         ShareFiles shareFiles = getItem(position);
-        user_by.setText(shareFiles.getUser_by());
-        time.setText(shareFiles.getCreatedAt());
-        title.setText(shareFiles.getShare_title());
-        size_and_download_num.setText(shareFiles.getShare_file_size()+"，"+shareFiles.getShare_file_download_num());
-        isFileType(shareFiles, type);
 
+        viewHolder.mTvShareFileUserBy.setText(shareFiles.getUser_by());
+        viewHolder.mTvShareFileTime.setText(shareFiles.getCreatedAt());
+        viewHolder.mTvShareFileTitle.setText(shareFiles.getShare_title());
+        viewHolder.mTvShareFileSizeAndDownloadNum.setText(shareFiles.getShare_file_download_num());
+
+        isFileType(shareFiles, viewHolder.mIvShareFileType);
         return convertView;
+    }
+
+    class ViewHolder {
+        public TextView mTvShareFileUserBy;
+        public TextView mTvShareFileTime;
+        public TextView mTvShareFileTitle;
+        public TextView mTvShareFileSizeAndDownloadNum;
+        public ImageView mIvShareFileType;
     }
 
     private void isFileType(ShareFiles shareFiles, ImageView imageView) {

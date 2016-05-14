@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.action_join:
                 // join QQ group
-                AppTools.joinQQGroup("cc84qhON5QFtjgPnOBtbFplqHmyPKEf7");
+                AppTools.joinQQGroup(MainActivity.this,"cc84qhON5QFtjgPnOBtbFplqHmyPKEf7");
                 break;
         }
 

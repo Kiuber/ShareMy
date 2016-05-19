@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_name_old_name"
+        android:id="@+id/tv_dialog_name_old_name"
         android:layout_width="wrap_content"
         android:layout_margin="@dimen/normal_space"
         android:layout_height="wrap_content"

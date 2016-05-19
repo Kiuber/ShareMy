@@ -27,7 +27,6 @@ public class FragmentMusic extends Fragment {
             ProgressDialog progressDialog = new ProgressDialog(getContext());
             progressDialog.setMessage("正在加载");
             progressDialog.setCancelable(false);
-            progressDialog.setCancelable(false);
             progressDialog.show();
 
             dataQuery.bmobQuery(progressDialog);

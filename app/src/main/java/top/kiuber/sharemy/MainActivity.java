@@ -9,9 +9,6 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -30,18 +27,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.smssdk.SMSSDK;
 import top.kiuber.sharemy.activity.LoginActivity;
 import top.kiuber.sharemy.activity.ShareFileActivity;
-import top.kiuber.sharemy.fragments.FragmentApk;
-import top.kiuber.sharemy.fragments.FragmentMusic;
-import top.kiuber.sharemy.fragments.FragmentOther;
-import top.kiuber.sharemy.fragments.FragmentPic;
-import top.kiuber.sharemy.fragments.FragmentTeach;
-import top.kiuber.sharemy.fragments.FragmentVideo;
-import top.kiuber.sharemy.fragments.FragmentZip;
 import top.kiuber.sharemy.javabeans.User;
 import top.kiuber.sharemy.utils.AppStaticText;
 import top.kiuber.sharemy.utils.AppTools;
@@ -50,12 +44,13 @@ import top.kiuber.sharemy.utils.SharedUtils;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
+    private static final int GO_LOGIN = 0;
     private TabLayout mTlIndex;
     private ViewPager mVpIndex;
     private ImageView mIvLogin;
 
-    private boolean mUserLoginStatus ;
-    private boolean mOldVersionAppisExist ;
+    private boolean mUserLoginStatus;
+    private boolean mOldVersionAppisExist;
 
     @Override
     protected void onStart() {
@@ -83,15 +78,16 @@ public class MainActivity extends AppCompatActivity
         }
 
         initConfig();
-        setTabLayoutAndViewPager();
+
+        AppTools appTools = new AppTools(MainActivity.this);
+        appTools.tablayoutSet(MainActivity.this, getSupportFragmentManager());
     }
 
     private void showUninstallOldAppDialog(Context context) {
-        mOldVersionAppisExist =AppTools.oldVersionIsExist(context);
+        mOldVersionAppisExist = AppTools.oldVersionIsExist(context);
         // user's login status
         if (mOldVersionAppisExist) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setCancelable(false);
             builder.setTitle(getString(R.string.uninstall_old_version_title));
             builder.setMessage(getString(R.string.uninstall_old_version_message));
             builder.setPositiveButton(getString(R.string.uninstall_old_version_positive), new DialogInterface.OnClickListener() {
@@ -143,36 +139,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-
-
-
-    private void setTabLayoutAndViewPager() {
-        mTlIndex = (TabLayout) findViewById(R.id.tab_FindFragment_title);
-        mVpIndex = (ViewPager) findViewById(R.id.vp_FindFragment_pager);
-
-
-        mVpIndex.setAdapter(new CustomAdapter(getSupportFragmentManager(), getApplicationContext()));
-        mTlIndex.setupWithViewPager(mVpIndex);
-        mTlIndex.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mVpIndex.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                mVpIndex.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                mVpIndex.setCurrentItem(tab.getPosition());
-            }
-        });
-
-
-    }
-
     private void showUpdateLogDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle(getString(R.string.update_log_title));
@@ -213,7 +179,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.action_join:
                 // join QQ group
-                AppTools.joinQQGroup(MainActivity.this,"cc84qhON5QFtjgPnOBtbFplqHmyPKEf7");
+                AppTools.joinQQGroup(MainActivity.this, "cc84qhON5QFtjgPnOBtbFplqHmyPKEf7");
                 break;
         }
 
@@ -227,65 +193,47 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_name) {
             if (mUserLoginStatus) {
-                LayoutInflater mInflater = LayoutInflater.from(MainActivity.this);
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                View v = mInflater.inflate(R.layout.dialog_name, null);
-                TextView textView = (TextView) v.findViewById(R.id.tv_name_old_name);
-                textView.setText(SharedUtils.getSharePreference(MainActivity.this, "user_information", MODE_PRIVATE, "user_name"));
-                builder.setView(v);
-                final Dialog dialog = builder.show();
+                showDialogName();
+            } else {
+                goLogin();
+            }
+        } else if (id == R.id.nav_password) {
+            if (mUserLoginStatus) {
+                LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                View view = layoutInflater.inflate(R.layout.dialog_password, null);
 
-                final TextInputLayout mTilNewName = (TextInputLayout) v.findViewById(R.id.til_name_new_name);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setView(view);
+                builder.create().show();
 
-                Button mBtnChange = (Button) v.findViewById(R.id.btn_dialog_name_change_name);
-                mBtnChange.setOnClickListener(new View.OnClickListener() {
+                final TextInputLayout EtOldPwd = (TextInputLayout) view.findViewById(R.id.til_dialog_password_old_pwd);
+                final TextInputLayout EtNewPwd = (TextInputLayout) view.findViewById(R.id.til_dialog_password_new_pwd);
+                TextInputLayout EtNewAgainPwd = (TextInputLayout) view.findViewById(R.id.til_dialog_password_new_again_pwd);
+                Button BtnChange = (Button) view.findViewById(R.id.btn_dialog_password_change);
+                Button BtnCancel = (Button) view.findViewById(R.id.btn_dialog_password_cancel);
+
+
+                BtnChange.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final String mStrNewName = mTilNewName.getEditText().getText().toString();
-                        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-                        progressDialog.setMessage("正在修改");
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
-                        User user = new User();
-                        user.setUser_name(mStrNewName);
 
-                        user.update(MainActivity.this, SharedUtils.getUserInformation(getApplicationContext(), "ObjectId"), new UpdateListener() {
-                            @Override
-                            public void onSuccess() {
-                                dialog.dismiss();
-                                progressDialog.dismiss();
-                                SharedUtils.putUserInformation(getApplicationContext(), "user_name", mStrNewName);
-                                AppTools.myToast(getApplicationContext(), "修改成功~", Toast.LENGTH_SHORT);
-                            }
+                        String strOldPwd = EtOldPwd.getEditText().getText().toString();
+                        String strNewPwd = EtOldPwd.getEditText().getText().toString();
+                        String strNewAgainPwd = EtOldPwd.getEditText().getText().toString();
 
-                            @Override
-                            public void onFailure(int i, String s) {
-                                dialog.dismiss();
-                                progressDialog.dismiss();
-                                AppTools.myToast(getApplicationContext(), s, Toast.LENGTH_SHORT);
-                            }
-                        });
-                    }
-                });
-                Button mBtnClose = (Button) v.findViewById(R.id.btn_dialog_name_cancel);
-                mBtnClose.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
+                        if (strOldPwd.equals("")) {
+                            AppTools.myToast(MainActivity.this, "请输入旧密码", Toast.LENGTH_SHORT);
+                        } else if (!strNewPwd.equals(strNewAgainPwd)) {
+                            AppTools.myToast(MainActivity.this, "两次密码输入不一致", Toast.LENGTH_SHORT);
+                        } else {
+                            changePwd(strOldPwd, strNewPwd);
+                        }
                     }
                 });
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage(getString(R.string.is_login_message));
-                builder.setNegativeButton(getString(R.string.is_login_negative), null);
-                builder.setPositiveButton("登录", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        goLogin();
-                    }
-                });
-                builder.create().show();
+                goLogin();
             }
+
         } else if (id == R.id.nav_share) {
             AppTools.myToast(MainActivity.this, getString(R.string.share_toast_text), Toast.LENGTH_SHORT);
             Intent intent = new Intent(Intent.ACTION_SEND);
@@ -294,11 +242,99 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent.createChooser(intent, getString(R.string.share_choose_title)));
         } else if (id == R.id.nav_login_out) {
             AppTools.exitLogin();
+            mUserLoginStatus = false;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void changePwd(final String EtOldPwd, final String EtNewPwd) {
+        BmobQuery<User> userBmobQuery = new BmobQuery<>();
+        userBmobQuery.addWhereEqualTo("ObjectId", SharedUtils.getUserInformation(MainActivity.this, "ObjectId"));
+        userBmobQuery.findObjects(MainActivity.this, new FindListener<User>() {
+            @Override
+            public void onSuccess(List<User> list) {
+                for (User user : list) {
+                    if (user.getUser_password().equals(EtOldPwd)) {
+                        final User user1 = new User();
+                        user1.setUser_password(EtNewPwd);
+                        user1.update(MainActivity.this, SharedUtils.getUserInformation(MainActivity.this, "ObjectId"), new UpdateListener() {
+                            @Override
+                            public void onSuccess() {
+                                AppTools.myToast(MainActivity.this, "密码更改成功", Toast.LENGTH_SHORT);
+                                AppTools.myToast(MainActivity.this, user1.getObjectId(), Toast.LENGTH_SHORT);
+                            }
+
+                            @Override
+                            public void onFailure(int i, String s) {
+
+                            }
+                        });
+                    } else {
+                        AppTools.myToast(MainActivity.this, "旧密码错误", Toast.LENGTH_SHORT);
+                    }
+                    AppTools.myToast(MainActivity.this, user.getUser_password(), Toast.LENGTH_SHORT);
+                }
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                AppTools.myToast(MainActivity.this, s, Toast.LENGTH_SHORT);
+            }
+        });
+
+    }
+
+    private void showDialogName() {
+        LayoutInflater mInflater = LayoutInflater.from(MainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View v = mInflater.inflate(R.layout.dialog_name, null);
+        TextView textView = (TextView) v.findViewById(R.id.tv_dialog_name_old_name);
+        textView.setText(SharedUtils.getSharePreference(MainActivity.this, "user_information", MODE_PRIVATE, "user_name"));
+        builder.setView(v);
+        final Dialog dialog = builder.show();
+
+        final TextInputLayout mTilNewName = (TextInputLayout) v.findViewById(R.id.til_name_new_name);
+
+        Button mBtnChange = (Button) v.findViewById(R.id.btn_dialog_name_change_name);
+        mBtnChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String mStrNewName = mTilNewName.getEditText().getText().toString();
+                final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+                progressDialog.setMessage("正在修改");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                User user = new User();
+                user.setUser_name(mStrNewName);
+
+                user.update(MainActivity.this, SharedUtils.getUserInformation(getApplicationContext(), "ObjectId"), new UpdateListener() {
+                    @Override
+                    public void onSuccess() {
+                        dialog.dismiss();
+                        progressDialog.dismiss();
+                        SharedUtils.putUserInformation(getApplicationContext(), "user_name", mStrNewName);
+                        AppTools.myToast(getApplicationContext(), "修改成功~", Toast.LENGTH_SHORT);
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+                        dialog.dismiss();
+                        progressDialog.dismiss();
+                        AppTools.myToast(getApplicationContext(), s, Toast.LENGTH_SHORT);
+                    }
+                });
+            }
+        });
+        Button mBtnClose = (Button) v.findViewById(R.id.btn_dialog_name_cancel);
+        mBtnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
 
@@ -325,47 +361,25 @@ public class MainActivity extends AppCompatActivity
 
 
     public void goLogin() {
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage(getString(R.string.is_login_message));
+        builder.setNegativeButton(getString(R.string.is_login_negative), null);
+        builder.setPositiveButton("登录", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivityForResult(new Intent(MainActivity.this, LoginActivity.class), GO_LOGIN);
+            }
+        });
+        builder.create().show();
     }
 
-    private class CustomAdapter extends FragmentPagerAdapter {
-        private String fragments[] = {"音乐", "安装包", "图片", "视频", "压缩包", "教程", "其他"};
-
-        public CustomAdapter(FragmentManager supportFragmentManager, Context applicationContext) {
-            super(supportFragmentManager);
-        }
-
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new FragmentMusic();
-                case 1:
-                    return new FragmentApk();
-                case 2:
-                    return new FragmentPic();
-                case 3:
-                    return new FragmentVideo();
-                case 4:
-                    return new FragmentZip();
-                case 5:
-                    return new FragmentTeach();
-                case 6:
-                    return new FragmentOther();
-                default:
-                    return null;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GO_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                mUserLoginStatus = true;
             }
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return fragments[position];
         }
     }
 

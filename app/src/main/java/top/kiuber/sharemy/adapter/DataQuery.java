@@ -45,6 +45,7 @@ public class DataQuery {
 
             @Override
             public void onError(int i, String s) {
+                progressDialog.dismiss();
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(s);
                 builder.setPositiveButton("重试", new DialogInterface.OnClickListener() {

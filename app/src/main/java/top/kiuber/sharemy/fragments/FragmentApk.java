@@ -22,14 +22,15 @@ public class FragmentApk extends Fragment {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View view = layoutInflater.inflate(R.layout.viewpaer_listview, null);
         ListView listView = (ListView) view.findViewById(R.id.lv_vp);
-        DataQuery dataQuery = new DataQuery(getContext(),"安卓安装包",listView);
+        DataQuery dataQuery = new DataQuery(getContext(), "安卓安装包", listView);
         try {
             ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.setMessage("正在加载");progressDialog.setCancelable(false);
+            progressDialog.setMessage("正在加载");
+            progressDialog.setCancelable(false);
             progressDialog.show();
 
             dataQuery.bmobQuery(progressDialog);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return view;

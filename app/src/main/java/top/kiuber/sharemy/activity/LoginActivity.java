@@ -156,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Intent intent = new Intent();
                 intent.putExtra("home_login_status_tv", "我的");
-                setResult(1, intent);
+                setResult(RESULT_OK, intent);
                 finish();
             } else {
                 mTilPwd.setErrorEnabled(true);

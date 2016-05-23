@@ -30,7 +30,6 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-import top.kiuber.sharemy.MainActivity;
 import top.kiuber.sharemy.R;
 import top.kiuber.sharemy.javabeans.AppInformation;
 import top.kiuber.sharemy.javabeans.User;
@@ -102,7 +101,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             case R.id.btn_register_send_verification:
                 String check_phoneString = phone.getText().toString();
                 // 1. 通过规则判断手机号
-                if (!judgePhoneNums(check_phoneString)) {
+                if (!AppTools.judgePhoneNums(RegisterActivity.this, check_phoneString)) {
                     return;
                 } else {
                     // 2. 通过sdk发送短信验证
@@ -206,49 +205,6 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         }
     };
 
-    /**
-     * 判断手机号码是否合理
-     *
-     * @param phoneNums
-     */
-    private boolean judgePhoneNums(String phoneNums) {
-        if (isMatchLength(phoneNums, 11) && isMobileNO(phoneNums)) {
-            return true;
-        }
-        Toast.makeText(this, "手机号码输入有误！", Toast.LENGTH_SHORT).show();
-        return false;
-    }
-
-    /**
-     * 判断一个字符串的位数
-     *
-     * @param str
-     * @param length
-     * @return
-     */
-    public static boolean isMatchLength(String str, int length) {
-        if (str.isEmpty()) {
-            return false;
-        } else {
-            return str.length() == length ? true : false;
-        }
-    }
-
-    /**
-     * 验证手机格式
-     */
-    public static boolean isMobileNO(String mobileNums) {
-        /*
-		 * 移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
-		 * 联通：130、131、132、152、155、156、185、186 电信：133、153、180、189、（1349卫通） 阿里：170
-		 * 小米：170 总结起来就是第一位必定为1，第二位必定为3或5或8，其他位置的可以为0-9
-		 */
-        String telRegex = "[1][3587]\\d{9}";// "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
-        if (TextUtils.isEmpty(mobileNums))
-            return false;
-        else
-            return mobileNums.matches(telRegex);
-    }
 
     @Override
     protected void onDestroy() {

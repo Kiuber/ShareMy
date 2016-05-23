@@ -1,22 +1,18 @@
-package top.kiuber.sharemy;
+package top.kiuber.sharemy.activity;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,23 +30,22 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.smssdk.SMSSDK;
-import top.kiuber.sharemy.activity.LoginActivity;
-import top.kiuber.sharemy.activity.ShareFileActivity;
+import top.kiuber.sharemy.R;
 import top.kiuber.sharemy.javabeans.User;
 import top.kiuber.sharemy.utils.AppStaticText;
 import top.kiuber.sharemy.utils.AppTools;
 import top.kiuber.sharemy.utils.SharedUtils;
+import top.kiuber.sharemy.utils.showLoading;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private static final int GO_LOGIN = 0;
-    private TabLayout mTlIndex;
-    private ViewPager mVpIndex;
     private ImageView mIvLogin;
 
     private boolean mUserLoginStatus;
     private boolean mOldVersionAppisExist;
+    private TextView mTvHeadViewName;
 
     @Override
     protected void onStart() {
@@ -122,8 +117,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if (mUserLoginStatus) {
-            TextView name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_main_name);
-            name.setText(SharedUtils.getSharePreference(MainActivity.this, "user_information", MODE_PRIVATE, "user_name"));
+            mTvHeadViewName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_main_name);
+            mTvHeadViewName.setText(SharedUtils.getSharePreference(MainActivity.this, "user_information", MODE_PRIVATE, "user_name"));
         }
 
         mIvLogin = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.iv_main_go_login);
@@ -204,11 +199,10 @@ public class MainActivity extends AppCompatActivity
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setView(view);
-                builder.create().show();
-
+                final Dialog dialog = builder.show();
                 final TextInputLayout EtOldPwd = (TextInputLayout) view.findViewById(R.id.til_dialog_password_old_pwd);
                 final TextInputLayout EtNewPwd = (TextInputLayout) view.findViewById(R.id.til_dialog_password_new_pwd);
-                TextInputLayout EtNewAgainPwd = (TextInputLayout) view.findViewById(R.id.til_dialog_password_new_again_pwd);
+                final TextInputLayout EtNewAgainPwd = (TextInputLayout) view.findViewById(R.id.til_dialog_password_new_again_pwd);
                 Button BtnChange = (Button) view.findViewById(R.id.btn_dialog_password_change);
                 Button BtnCancel = (Button) view.findViewById(R.id.btn_dialog_password_cancel);
 
@@ -218,16 +212,22 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(View v) {
 
                         String strOldPwd = EtOldPwd.getEditText().getText().toString();
-                        String strNewPwd = EtOldPwd.getEditText().getText().toString();
-                        String strNewAgainPwd = EtOldPwd.getEditText().getText().toString();
+                        String strNewPwd = EtNewPwd.getEditText().getText().toString();
+                        String strNewAgainPwd = EtNewAgainPwd.getEditText().getText().toString();
 
                         if (strOldPwd.equals("")) {
                             AppTools.myToast(MainActivity.this, "请输入旧密码", Toast.LENGTH_SHORT);
-                        } else if (!strNewPwd.equals(strNewAgainPwd)) {
+                        } else if (!(strNewPwd.equals(strNewAgainPwd))) {
                             AppTools.myToast(MainActivity.this, "两次密码输入不一致", Toast.LENGTH_SHORT);
                         } else {
-                            changePwd(strOldPwd, strNewPwd);
+                            changePwd(dialog, strOldPwd, strNewPwd);
                         }
+                    }
+                });
+                BtnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
                     }
                 });
             } else {
@@ -236,12 +236,13 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
             AppTools.myToast(MainActivity.this, getString(R.string.share_toast_text), Toast.LENGTH_SHORT);
+            new showLoading(MainActivity.this).showLoadingDialog();
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_extra_content));
             startActivity(intent.createChooser(intent, getString(R.string.share_choose_title)));
         } else if (id == R.id.nav_login_out) {
-            AppTools.exitLogin();
+            AppTools.exitLogin(this);
             mUserLoginStatus = false;
         }
 
@@ -250,41 +251,48 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void changePwd(final String EtOldPwd, final String EtNewPwd) {
+    private void changePwd(final Dialog dialog, final String strOldPwd, final String strNewPwd) {
+        showLoading showLoading = new showLoading(MainActivity.this);
+        final Dialog dialog1 = showLoading.showLoadingDialog();
+
         BmobQuery<User> userBmobQuery = new BmobQuery<>();
-        userBmobQuery.addWhereEqualTo("ObjectId", SharedUtils.getUserInformation(MainActivity.this, "ObjectId"));
+        final String objectId = SharedUtils.getUserInformation(MainActivity.this, "ObjectId");
+        userBmobQuery.addWhereEqualTo("objectId", objectId);
         userBmobQuery.findObjects(MainActivity.this, new FindListener<User>() {
             @Override
             public void onSuccess(List<User> list) {
                 for (User user : list) {
-                    if (user.getUser_password().equals(EtOldPwd)) {
-                        final User user1 = new User();
-                        user1.setUser_password(EtNewPwd);
-                        user1.update(MainActivity.this, SharedUtils.getUserInformation(MainActivity.this, "ObjectId"), new UpdateListener() {
+                    if (user.getUser_password().equals(strOldPwd)) {
+                        User user1 = new User();
+                        user1.setUser_password(strNewPwd);
+                        user1.update(MainActivity.this, objectId, new UpdateListener() {
                             @Override
                             public void onSuccess() {
-                                AppTools.myToast(MainActivity.this, "密码更改成功", Toast.LENGTH_SHORT);
-                                AppTools.myToast(MainActivity.this, user1.getObjectId(), Toast.LENGTH_SHORT);
+                                Toast.makeText(MainActivity.this, "密码修改成功", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                                dialog1.dismiss();
                             }
 
                             @Override
                             public void onFailure(int i, String s) {
-
+                                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+                                dialog1.dismiss();
                             }
                         });
-                    } else {
-                        AppTools.myToast(MainActivity.this, "旧密码错误", Toast.LENGTH_SHORT);
                     }
-                    AppTools.myToast(MainActivity.this, user.getUser_password(), Toast.LENGTH_SHORT);
+                    if (!(user.getUser_password().equals(strOldPwd))) {
+                        Toast.makeText(MainActivity.this, "旧密码错误", Toast.LENGTH_SHORT).show();
+                        dialog1.dismiss();
+                    }
                 }
             }
 
             @Override
             public void onError(int i, String s) {
-                AppTools.myToast(MainActivity.this, s, Toast.LENGTH_SHORT);
+                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+
             }
         });
-
     }
 
     private void showDialogName() {
@@ -303,10 +311,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 final String mStrNewName = mTilNewName.getEditText().getText().toString();
-                final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-                progressDialog.setMessage("正在修改");
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+                showLoading showLoading = new showLoading(MainActivity.this);
+                final Dialog dialog1 = showLoading.showLoadingDialog();
+
                 User user = new User();
                 user.setUser_name(mStrNewName);
 
@@ -314,15 +321,16 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onSuccess() {
                         dialog.dismiss();
-                        progressDialog.dismiss();
+                        dialog1.dismiss();
                         SharedUtils.putUserInformation(getApplicationContext(), "user_name", mStrNewName);
-                        AppTools.myToast(getApplicationContext(), "修改成功~", Toast.LENGTH_SHORT);
+                        AppTools.myToast(getApplicationContext(), "昵称修改成功~", Toast.LENGTH_SHORT);
+                        mTvHeadViewName.setText(mStrNewName);
                     }
 
                     @Override
                     public void onFailure(int i, String s) {
                         dialog.dismiss();
-                        progressDialog.dismiss();
+                        dialog1.dismiss();
                         AppTools.myToast(getApplicationContext(), s, Toast.LENGTH_SHORT);
                     }
                 });

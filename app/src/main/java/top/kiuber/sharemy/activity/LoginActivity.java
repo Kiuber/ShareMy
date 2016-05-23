@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -26,10 +27,10 @@ import top.kiuber.sharemy.utils.SharedUtils;
  */
 public class LoginActivity extends AppCompatActivity {
 
-
     private TextInputLayout mTilTel, mTilPwd;
     private EditText mEtTel, mEtPwd;
-    private Button mBtnLogin, mBtnRegister;
+    private Button mBtnLogin;
+    private TextView mTvRegister, mTvFindPassword;
     private String mStrTel, mStrPwd;
 
     @Override
@@ -46,12 +47,20 @@ public class LoginActivity extends AppCompatActivity {
 
 
         mBtnLogin = (Button) findViewById(R.id.btn_login_login);
-        mBtnRegister = (Button) findViewById(R.id.btn_login_register);
+        mTvRegister = (TextView) findViewById(R.id.tv_login_register);
+        mTvFindPassword = (TextView) findViewById(R.id.tv_login_find_password);
 
-        mBtnRegister.setOnClickListener(new OnClickListener() {
+        mTvRegister.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            }
+        });
+
+        mTvFindPassword.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, FindPasswordActivity.class));
             }
         });
 

@@ -1,17 +1,30 @@
 package top.kiuber.sharemy.adapter;
 
+import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 import top.kiuber.sharemy.R;
 import top.kiuber.sharemy.javabeans.ShareFiles;
+import top.kiuber.sharemy.javabeans.User;
+import top.kiuber.sharemy.utils.AppTools;
 
 /**
  * Created by Administrator on 2016/4/28.
@@ -21,6 +34,7 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private int m_count;
     private List<ShareFiles> m_shareFiles;
+    private long downloadId = 0;
 
 
     public ViewPagerListViewAdapter(Context context, int count, List<ShareFiles> shareFiles) {
@@ -64,12 +78,17 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
         }
         ShareFiles shareFiles = getItem(position);
 
-        viewHolder.mTvShareFileUserBy.setText(shareFiles.getUser_by());
+//        viewHolder.mTvShareFileUserBy.setText(shareFiles.getUser_by());
+        queryShareBy(viewHolder.mTvShareFileUserBy, shareFiles.getUser_object_id());
+
         viewHolder.mTvShareFileTime.setText(shareFiles.getCreatedAt());
         viewHolder.mTvShareFileTitle.setText(shareFiles.getShare_title());
         viewHolder.mTvShareFileSizeAndDownloadNum.setText(shareFiles.getShare_file_download_num());
 
         isFileType(shareFiles, viewHolder.mIvShareFileType);
+
+        convertViewSetOnClick(convertView, viewHolder, shareFiles);
+
         return convertView;
     }
 
@@ -107,4 +126,105 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
                 break;
         }
     }
+
+    private void queryShareBy(final TextView textView, String objectId) {
+        BmobQuery<User> userBmobQuery = new BmobQuery();
+        userBmobQuery.addWhereEqualTo("objectId", objectId);
+        userBmobQuery.findObjects(mContext, new FindListener<User>() {
+            @Override
+            public void onSuccess(List<User> list) {
+                for (User user : list) {
+                    textView.setText(user.getUser_name());
+                }
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+        });
+    }
+
+    private void convertViewSetOnClick(View convertView, final ViewHolder viewHolder, final ShareFiles shareFiles) {
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+                View view = layoutInflater.inflate(R.layout.dialog_share_detail, null);
+
+                ImageView mIvShareFileClose = (ImageView) view.findViewById(R.id.iv_dialog_share_detail_close);
+                TextView mTvShareFileUserBy = (TextView) view.findViewById(R.id.tv_dialog_share_detail_user_by);
+                TextView mTvShareFileFileName = (TextView) view.findViewById(R.id.tv_dialog_share_detail_file_title);
+                TextView mTvShareFileFileTime = (TextView) view.findViewById(R.id.tv_dialog_share_detail_file_time);
+                ImageView mIvShareFileDownload = (ImageView) view.findViewById(R.id.iv_dialog_share_detail_file_download);
+                ImageView mIvShareFileLook = (ImageView) view.findViewById(R.id.iv_dialog_share_detail_file_look);
+
+                mTvShareFileUserBy.setText(viewHolder.mTvShareFileUserBy.getText().toString());
+                mTvShareFileFileName.setText(viewHolder.mTvShareFileTitle.getText().toString());
+                mTvShareFileFileTime.setText(viewHolder.mTvShareFileTime.getText().toString());
+
+                mIvShareFileDownload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        downloadShareFile(viewHolder, shareFiles);
+                    }
+                });
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setView(view);
+                final Dialog dialog = builder.show();
+
+                mIvShareFileClose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                mIvShareFileLook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mContext.startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+                    }
+                });
+            }
+        });
+    }
+
+    private void downloadShareFile(ViewHolder viewHolder, ShareFiles shareFiles) {
+
+        DownloadManager downloadManager = (DownloadManager) mContext
+                .getSystemService(mContext.DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(
+                Uri.parse(shareFiles.getUser_upload_file()));
+
+        DownloadManager.Query query = new DownloadManager.Query();
+        query.setFilterById(downloadId);
+        Cursor cursor = downloadManager.query(query);
+        if (!cursor.moveToFirst()) {
+            // 没有记录
+            request.setDestinationInExternalPublicDir("ShareMy", shareFiles.getShare_name());
+            downloadId = downloadManager.enqueue(request);
+
+            shareFiles
+                    .setShare_file_download_num((Integer.parseInt(viewHolder.mTvShareFileSizeAndDownloadNum.getText().toString()) + 1) + "");
+            shareFiles.update(mContext, shareFiles.getObjectId(), new UpdateListener() {
+
+                @Override
+                public void onSuccess() {
+                    // TODO Auto-generated method stub
+                }
+
+                @Override
+                public void onFailure(int arg0, String arg1) {
+                    AppTools.myToast(mContext, arg1, 1);
+                }
+            });
+            AppTools.myToast(mContext, "正在下载" + viewHolder.mTvShareFileTitle.getText().toString(), 1);
+        } else {
+            Toast.makeText(mContext, "已经加入到下载队列", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }
+

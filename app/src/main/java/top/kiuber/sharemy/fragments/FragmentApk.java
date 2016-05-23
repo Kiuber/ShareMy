@@ -1,5 +1,6 @@
 package top.kiuber.sharemy.fragments;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,8 @@ import android.widget.ListView;
 
 import top.kiuber.sharemy.R;
 import top.kiuber.sharemy.adapter.DataQuery;
+import top.kiuber.sharemy.utils.AppTools;
+import top.kiuber.sharemy.utils.showLoading;
 
 /**
  * Created by Administrator on 2016/4/28.
@@ -24,12 +27,10 @@ public class FragmentApk extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.lv_vp);
         DataQuery dataQuery = new DataQuery(getContext(), "安卓安装包", listView);
         try {
-            ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.setMessage("正在加载");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+            showLoading showLoading =new showLoading(getContext());
+            Dialog dialog = showLoading.showLoadingDialog();
 
-            dataQuery.bmobQuery(progressDialog);
+            dataQuery.bmobQuery(dialog);
         } catch (Exception e) {
             e.printStackTrace();
         }

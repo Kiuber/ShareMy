@@ -2,6 +2,7 @@ package top.kiuber.sharemy.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,10 +18,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
+import cn.smssdk.SMSSDK;
 import top.kiuber.sharemy.R;
 import top.kiuber.sharemy.fragments.FragmentApk;
 import top.kiuber.sharemy.fragments.FragmentMusic;
@@ -29,6 +37,7 @@ import top.kiuber.sharemy.fragments.FragmentPic;
 import top.kiuber.sharemy.fragments.FragmentTeach;
 import top.kiuber.sharemy.fragments.FragmentVideo;
 import top.kiuber.sharemy.fragments.FragmentZip;
+import top.kiuber.sharemy.javabeans.User;
 
 /**
  * Created by Administrator on 2016/4/27.
@@ -179,24 +188,26 @@ public class AppTools {
     }
 
     //
-    public static void exitLogin() {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext);
-        builder.setMessage("确定要退出账号吗？");
-        builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+    public static void exitLogin(final Context context) {
+        if (AppTools.isLogin(context)) {
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext);
+            builder.setMessage("确定要退出账号吗？");
+            builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SharedUtils.clearUserInformation(mContext);
+                    SharedUtils
+                            .saveSharePreference(mContext, "others",
+                                    Context.MODE_PRIVATE, "login_status", "false");
+                    Toast.makeText(context, "退出成功！", Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-
-                SharedUtils.clearUserInformation(mContext);
-                SharedUtils
-                        .saveSharePreference(mContext, "others",
-                                Context.MODE_PRIVATE, "login_status", "false");
-
-            }
-        });
-        builder.setNegativeButton("取消", null);
-        builder.create().show();
+                }
+            });
+            builder.setNegativeButton("取消", null);
+            builder.create().show();
+        } else {
+            Toast.makeText(context, "大兄弟，您还没登录呢！", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /****************
@@ -289,4 +300,48 @@ public class AppTools {
         }
     }
 
+
+    /**
+     * 判断手机号码是否合理
+     *
+     * @param phoneNums
+     */
+    public static boolean judgePhoneNums(Context context, String phoneNums) {
+        if (AppTools.isMatchLength(phoneNums, 11) && AppTools.isMobileNO(phoneNums)) {
+            return true;
+        }
+        Toast.makeText(context, "手机号码输入有误！", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    /**
+     * 判断一个字符串的位数
+     *
+     * @param str
+     * @param length
+     * @return
+     */
+    public static boolean isMatchLength(String str, int length) {
+        if (str.isEmpty()) {
+            return false;
+        } else {
+            return str.length() == length ? true : false;
+        }
+    }
+
+    /**
+     * 验证手机格式
+     */
+    public static boolean isMobileNO(String mobileNums) {
+        /*
+         * 移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
+		 * 联通：130、131、132、152、155、156、185、186 电信：133、153、180、189、（1349卫通） 阿里：170
+		 * 小米：170 总结起来就是第一位必定为1，第二位必定为3或5或8，其他位置的可以为0-9
+		 */
+        String telRegex = "[1][3587]\\d{9}";// "[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
+        if (TextUtils.isEmpty(mobileNums))
+            return false;
+        else
+            return mobileNums.matches(telRegex);
+    }
 }

@@ -1,9 +1,6 @@
 package top.kiuber.sharemy.activity;
 
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,10 +37,10 @@ import top.kiuber.sharemy.utils.SharedUtils;
  */
 public class ShareFileActivity extends AppCompatActivity implements View.OnClickListener,
         View.OnLongClickListener {
-    private Intent intent;
-    private EditText et_share_file_path, et_share_file_title,
-            et_share_file_content;
-    private TextView tv_share_by;
+    private Intent mIntent;
+    private EditText mEtShareFilePath, mEtShareFileTitle,
+            mEtShareFileContent;
+    private TextView mTvShareBy;
     private static final int FILE_SELECT_CODE = 0x111;
 
     private ImageView mIvShareFileType;
@@ -68,13 +65,12 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.share_file_index);
         findViewById(R.id.btn_share_file_share).setOnClickListener(this);
         showFileChooser();
-        et_share_file_path = (EditText) findViewById(R.id.et_share_file_path);
-        et_share_file_path.setOnClickListener(this);
-        et_share_file_title = (EditText) findViewById(R.id.et_share_file_title);
+        mEtShareFilePath = (EditText) findViewById(R.id.et_share_file_path);
+        mEtShareFilePath.setOnClickListener(this);
+        mEtShareFileTitle = (EditText) findViewById(R.id.et_share_file_title);
         findViewById(R.id.btn_share_file_choose).setOnClickListener(this);
-        et_share_file_content = (EditText) findViewById(R.id.et_share_file_content);
-        tv_share_by = (TextView) findViewById(R.id.tv_share_by);
-        tv_share_by.setText("由 "
+        mTvShareBy = (TextView) findViewById(R.id.tv_share_by);
+        mTvShareBy.setText("由 "
                 + SharedUtils.getSharePreference(getApplicationContext(),
                 "user_information", Context.MODE_PRIVATE, "user_name")
                 + " 分享");
@@ -85,10 +81,10 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_share_file_share:
-                if (TextUtils.equals(et_share_file_path.getText().toString(), "")) {
+                if (TextUtils.equals(mEtShareFilePath.getText().toString(), "")) {
                     AppTools.myToast(getApplicationContext(), "请选择文件或者手动填写路径~", 1);
                 } else {
-                    if (TextUtils.equals(et_share_file_title.getText().toString(),
+                    if (TextUtils.equals(mEtShareFileTitle.getText().toString(),
                             "")) {
                         AppTools.myToast(getApplicationContext(), "请填写标题~", 1);
                     } else {
@@ -108,12 +104,12 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
      * 调用文件选择软件来选择文件
      **/
     private void showFileChooser() {
-        intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        mIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        mIntent.setType("*/*");
+        mIntent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
             startActivityForResult(
-                    Intent.createChooser(intent, "Select a File to Upload"),
+                    Intent.createChooser(mIntent, "Select a File to Upload"),
                     FILE_SELECT_CODE);
         } catch (android.content.ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog
@@ -133,7 +129,7 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
                     Uri uri = data.getData();
                     final String path = FileUtils.getPath(this, uri);
 
-                    et_share_file_path.setText(path);
+                    mEtShareFilePath.setText(path);
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("提示");
@@ -143,16 +139,16 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
                                 @Override
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
-                                    et_share_file_title.setText(getFileName(path));
+                                    mEtShareFileTitle.setText(getFileName(path));
                                     mIvShareFileType.setVisibility(View.VISIBLE);
-                                    isShareFileType(mIvShareFileType, calShareFileSuffix(et_share_file_path.getText().toString()));
+                                    isShareFileType(mIvShareFileType, calShareFileSuffix(mEtShareFilePath.getText().toString()));
                                 }
                             });
                     builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            et_share_file_title.setText(getFileName(path));
-                            isShareFileType(mIvShareFileType, calShareFileSuffix(et_share_file_path.getText().toString()));
+                            mEtShareFileTitle.setText(getFileName(path));
+                            isShareFileType(mIvShareFileType, calShareFileSuffix(mEtShareFilePath.getText().toString()));
                         }
                     });
                     builder.create().show();
@@ -168,7 +164,7 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
         progressDialog.setMessage("正在上传文件\n点击空白处或者返回键可以后台上传");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.show();
-        final BmobFile bmobFile = new BmobFile(new File(et_share_file_path
+        final BmobFile bmobFile = new BmobFile(new File(mEtShareFilePath
                 .getText().toString()));
         bmobFile.uploadblock(this, new UploadFileListener() {
 
@@ -177,7 +173,7 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
                 saveFileInformation(
                         bmobFile.getFileUrl(getApplicationContext()),
                         bmobFile.getFilename(), progressDialog,
-                        et_share_file_path.getText().toString());
+                        mEtShareFilePath.getText().toString());
             }
 
             @Override
@@ -227,8 +223,8 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
                 getApplicationContext(), "user_information",
                 Context.MODE_PRIVATE, "user_name"));
         shareFiles.setUser_upload_file(fileUrl);
-        shareFiles.setShare_title(et_share_file_title.getText().toString());
-        shareFiles.setShare_content(et_share_file_content.getText().toString());
+        shareFiles.setShare_title(mEtShareFileTitle.getText().toString());
+        shareFiles.setShare_content(mEtShareFileContent.getText().toString());
         shareFiles.setShare_name(fileName);
         shareFiles.setShare_user_location(SharedUtils.getSharePreference(
                 getApplicationContext(), "others", Context.MODE_PRIVATE,
@@ -236,7 +232,7 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
         shareFiles.setShare_file_size(FormetFileSize(new File(path)));
         shareFiles.setShare_file_download_num("0");
 
-        isShareFileType(shareFiles, calShareFileSuffix(et_share_file_path.getText().toString()));
+        isShareFileType(shareFiles, calShareFileSuffix(mEtShareFilePath.getText().toString()));
         shareFiles.save(getApplicationContext(), new SaveListener() {
 
             @Override

@@ -1,5 +1,6 @@
 package top.kiuber.sharemy.adapter;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,7 +20,6 @@ public class DataQuery {
     private Context mContext;
     private String m_where;
     private ListView m_listView;
-    private ProgressDialog progressDialog;
 
     public DataQuery(Context context, String where, ListView view) {
         mContext = context;
@@ -27,7 +27,7 @@ public class DataQuery {
         m_listView = view;
     }
 
-    public void bmobQuery(final ProgressDialog progressDialog) {
+    public void bmobQuery(final Dialog dialog) {
 
 
         BmobQuery<ShareFiles> query = new BmobQuery<>();
@@ -36,7 +36,7 @@ public class DataQuery {
         query.findObjects(mContext, new FindListener<ShareFiles>() {
             @Override
             public void onSuccess(List<ShareFiles> list) {
-                progressDialog.dismiss();
+                dialog.dismiss();
                 if (!(list == null)) {
                     m_listView.setAdapter(new ViewPagerListViewAdapter(mContext, list.size(), list));
                 }
@@ -45,7 +45,7 @@ public class DataQuery {
 
             @Override
             public void onError(int i, String s) {
-                progressDialog.dismiss();
+                dialog.dismiss();
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(s);
                 builder.setPositiveButton("重试", new DialogInterface.OnClickListener() {

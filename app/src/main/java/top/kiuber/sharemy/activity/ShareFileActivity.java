@@ -1,6 +1,7 @@
 package top.kiuber.sharemy.activity;
 
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,9 +12,12 @@ import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.io.File;
@@ -44,6 +48,7 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
     private static final int FILE_SELECT_CODE = 0x111;
 
     private ImageView mIvShareFileType;
+
     String[] music = {"mp3", "m4a", "aac", "wav", "au", "aif", "ram",
             "wma", "mmf", "amr", "flac"};
 
@@ -62,7 +67,7 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.share_file_index);
+        setContentView(R.layout.activity_share_file);
         findViewById(R.id.btn_share_file_share).setOnClickListener(this);
         showFileChooser();
         mEtShareFilePath = (EditText) findViewById(R.id.et_share_file_path);
@@ -74,7 +79,8 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
                 + SharedUtils.getSharePreference(getApplicationContext(),
                 "user_information", Context.MODE_PRIVATE, "user_name")
                 + " 分享");
-        mIvShareFileType = (ImageView) findViewById(R.id.iv_sharefile_type);
+        mIvShareFileType = (ImageView) findViewById(R.id.iv_share_file_type);
+        mIvShareFileType.setOnClickListener(this);
     }
 
     @Override
@@ -94,6 +100,47 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.btn_share_file_choose:
                 showFileChooser();
+                break;
+            case R.id.iv_share_file_type:
+
+                View view = View.inflate(ShareFileActivity.this, R.layout.dialog_share_file_select_file_type, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ShareFileActivity.this);
+                builder.setView(view);
+                final Dialog dialog = builder.show();
+
+                final RadioButton mRbMusic = (RadioButton) view.findViewById(R.id.rb_dialog_share_file_select_file_type_music);
+                final RadioButton mRbApk = (RadioButton) view.findViewById(R.id.rb_dialog_share_file_select_file_type_apk);
+                final RadioButton mRbPic = (RadioButton) view.findViewById(R.id.rb_dialog_share_file_select_file_type_pic);
+                final RadioButton mRbVideo = (RadioButton) view.findViewById(R.id.rb_dialog_share_file_select_file_type_video);
+                final RadioButton mRbZip = (RadioButton) view.findViewById(R.id.rb_dialog_share_file_select_file_type_zip);
+                final RadioButton mRbDoc = (RadioButton) view.findViewById(R.id.rb_dialog_share_file_select_file_type_doc);
+                final RadioButton mRbFav = (RadioButton) view.findViewById(R.id.rb_dialog_share_file_select_file_type_fav);
+                RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.rg_dialog_share_file_select_file_type);
+
+                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        Log.d("checkedId", checkedId + mRbMusic.getId() + "");
+                        if (checkedId == mRbMusic.getId()) {
+                            mIvShareFileType.setBackgroundResource(R.mipmap.category_file_icon_music_phone_normal);
+                        } else if (checkedId == mRbApk.getId()) {
+                            mIvShareFileType.setBackgroundResource(R.mipmap.category_file_icon_apk_phone_normal);
+                        } else if (checkedId == mRbPic.getId()) {
+                            mIvShareFileType.setBackgroundResource(R.mipmap.category_file_icon_pic_phone_normal);
+                        } else if (checkedId == mRbVideo.getId()) {
+                            mIvShareFileType.setBackgroundResource(R.mipmap.category_file_icon_video_phone_normal);
+                        } else if (checkedId == mRbZip.getId()) {
+                            mIvShareFileType.setBackgroundResource(R.mipmap.category_file_icon_zip_phone_normal);
+                        } else if (checkedId == mRbDoc.getId()) {
+                            mIvShareFileType.setBackgroundResource(R.mipmap.category_file_icon_doc_phone_normal);
+                        } else if (checkedId == mRbFav.getId()) {
+                            mIvShareFileType.setBackgroundResource(R.mipmap.category_file_icon_fav_phone_normal);
+                        } else {
+                        }
+                        dialog.dismiss();
+                    }
+                });
                 break;
             default:
                 break;
@@ -134,6 +181,7 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("提示");
                     builder.setMessage("是否把文件名当作标题？");
+                    builder.setCancelable(false);
                     builder.setPositiveButton("是",
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -167,7 +215,6 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
         final BmobFile bmobFile = new BmobFile(new File(mEtShareFilePath
                 .getText().toString()));
         bmobFile.uploadblock(this, new UploadFileListener() {
-
             @Override
             public void onSuccess() {
                 saveFileInformation(
@@ -183,12 +230,9 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
 
             @Override
             public void onFailure(int arg0, String arg1) {
+                AppTools.myToast(getApplicationContext(), arg1, 1);
                 progressDialog.dismiss();
-                if (arg1.contains("suffix")) {
-                    AppTools.myToast(getApplicationContext(), "请选择带有后缀名的文件", 1);
-                } else {
-                    AppTools.myToast(getApplicationContext(), arg1, 1);
-                }
+                Log.d("arg1", arg1);
             }
         });
     }

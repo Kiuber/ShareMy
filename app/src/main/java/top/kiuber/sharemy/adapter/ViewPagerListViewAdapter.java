@@ -118,7 +118,7 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
             case "压缩包":
                 imageView.setBackgroundResource(R.mipmap.category_file_icon_zip_phone_normal);
                 break;
-            case "教程":
+            case "文档":
                 imageView.setBackgroundResource(R.mipmap.category_file_icon_doc_phone_normal);
                 break;
             case "其他":

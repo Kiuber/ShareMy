@@ -1,5 +1,6 @@
 package top.kiuber.sharemy.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -19,11 +20,12 @@ public class SharedUtils {
     }
 
     // 判断是否是首次启动，写入boolean类型的值
+    @SuppressLint("CommitPrefEdits")
     public static void putWelcomeBoolean(Context context, Boolean isFirst) {
         SharedPreferences.Editor editor = context.getSharedPreferences(START_FILE_NAME,
                 Context.MODE_APPEND).edit();
         editor.putBoolean(START_MODE_NAME, isFirst);
-        editor.commit();
+        editor.apply();
     }
 
     //判断登录状态，获取boolean类型值
@@ -37,7 +39,7 @@ public class SharedUtils {
         SharedPreferences.Editor editor = context.getSharedPreferences(START_FILE_NAME,
                 Context.MODE_APPEND).edit();
         editor.putBoolean("login_status", isFirst);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -72,7 +74,7 @@ public class SharedUtils {
         SharedPreferences.Editor editor = context.getSharedPreferences(START_FILE_NAME,
                 Context.MODE_APPEND).edit();
         editor.putBoolean("login_status", false);
-        editor.commit();
+        editor.apply();
     }
 
     //删除USER信息
@@ -80,7 +82,7 @@ public class SharedUtils {
         SharedPreferences.Editor editor = context.getSharedPreferences(USER_INFORMATION_FILE_NAME,
                 Context.MODE_APPEND).edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 
     /**

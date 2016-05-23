@@ -18,14 +18,14 @@ import top.kiuber.sharemy.utils.showLoading;
 /**
  * Created by Administrator on 2016/4/28.
  */
-public class FragmentTeach extends Fragment {
+public class FragmentDoc extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View view = layoutInflater.inflate(R.layout.viewpaer_listview, null);
         ListView listView = (ListView) view.findViewById(R.id.lv_vp);
-        DataQuery dataQuery = new DataQuery(getContext(), "教程", listView);
+        DataQuery dataQuery = new DataQuery(getContext(), "文档", listView);
         try {
             showLoading showLoading =new showLoading(getContext());
             Dialog dialog = showLoading.showLoadingDialog();

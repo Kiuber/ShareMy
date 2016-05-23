@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:orientation="vertical"
-        android:padding="@dimen/normal_space" >
+        android:padding="@dimen/normal_space">
 
         <TextView
             android:id="@+id/tv_register_dialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="我们已经将验证码"
-            android:textSize="28dp"
+            android:textSize="28sp"
             android:visibility="gone" />
 
         <EditText
@@ -25,6 +26,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_stay_primary_portrait_black_24dp"
             android:drawablePadding="@dimen/normal_space"
+            android:drawableStart="@drawable/ic_stay_primary_portrait_black_24dp"
             android:hint="请输入手机号"
             android:inputType="phone"
             android:singleLine="true" />
@@ -36,6 +38,7 @@
             android:layout_marginTop="@dimen/normal_space"
             android:drawableLeft="@drawable/ic_stay_primary_portrait_black_24dp"
             android:drawablePadding="@dimen/normal_space"
+            android:drawableStart="@drawable/ic_stay_primary_portrait_black_24dp"
             android:hint="请输入验证码"
             android:inputType="number"
             android:singleLine="true"
@@ -49,6 +52,7 @@
             android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQSTUVWXYZ"
             android:drawableLeft="@drawable/ic_stay_primary_portrait_black_24dp"
             android:drawablePadding="@dimen/normal_space"
+            android:drawableStart="@drawable/ic_stay_primary_portrait_black_24dp"
             android:hint="请输入密码"
             android:inputType="phone"
             android:singleLine="true"
@@ -62,6 +66,7 @@
             android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQSTUVWXYZ"
             android:drawableLeft="@drawable/ic_stay_primary_portrait_black_24dp"
             android:drawablePadding="@dimen/normal_space"
+            android:drawableStart="@drawable/ic_stay_primary_portrait_black_24dp"
             android:hint="请再次输入密码"
             android:inputType="phone"
             android:singleLine="true"
@@ -94,7 +99,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:gravity="center_horizontal" >
+        android:gravity="center_horizontal">
 
         <TextView
             android:id="@+id/tv_register_treaty"
@@ -103,7 +108,7 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/normal_space"
             android:text="注册完成即代表您同意ShareMy用户使用协议"
-            android:textSize="10dp" />
+            android:textSize="10sp" />
     </RelativeLayout>
 
 </LinearLayout>

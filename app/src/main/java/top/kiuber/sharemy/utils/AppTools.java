@@ -2,7 +2,6 @@ package top.kiuber.sharemy.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,26 +17,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.listener.FindListener;
-import cn.smssdk.SMSSDK;
 import top.kiuber.sharemy.R;
 import top.kiuber.sharemy.fragments.FragmentApk;
+import top.kiuber.sharemy.fragments.FragmentDoc;
 import top.kiuber.sharemy.fragments.FragmentMusic;
 import top.kiuber.sharemy.fragments.FragmentOther;
 import top.kiuber.sharemy.fragments.FragmentPic;
-import top.kiuber.sharemy.fragments.FragmentTeach;
 import top.kiuber.sharemy.fragments.FragmentVideo;
 import top.kiuber.sharemy.fragments.FragmentZip;
-import top.kiuber.sharemy.javabeans.User;
 
 /**
  * Created by Administrator on 2016/4/27.
@@ -260,7 +251,7 @@ public class AppTools {
     }
 
     private class CustomAdapter extends FragmentPagerAdapter {
-        private String fragments[] = {"音乐", "安装包", "图片", "视频", "压缩包", "教程", "其他"};
+        private String fragments[] = {"音乐", "安装包", "图片", "视频", "压缩包", "文档", "其他"};
 
         public CustomAdapter(FragmentManager supportFragmentManager, Context applicationContext) {
             super(supportFragmentManager);
@@ -281,7 +272,7 @@ public class AppTools {
                 case 4:
                     return new FragmentZip();
                 case 5:
-                    return new FragmentTeach();
+                    return new FragmentDoc();
                 case 6:
                     return new FragmentOther();
                 default:

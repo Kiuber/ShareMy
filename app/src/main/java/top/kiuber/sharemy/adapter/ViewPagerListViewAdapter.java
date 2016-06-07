@@ -243,7 +243,7 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
 
             @Override
             public void onSuccess() {
-                // TODO Auto-generated method stub
+
             }
 
             @Override
@@ -260,7 +260,7 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
 
             @Override
             public void onSuccess() {
-                // TODO Auto-generated method stub
+
             }
 
             @Override
@@ -269,6 +269,5 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
             }
         });
     }
-
 }
 

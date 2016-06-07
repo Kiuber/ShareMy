@@ -155,7 +155,7 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
         mIntent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
             startActivityForResult(
-                    Intent.createChooser(mIntent, "Select a File to Upload"),
+                    Intent.createChooser(mIntent, "选择一个文件"),
                     FILE_SELECT_CODE);
         } catch (android.content.ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog

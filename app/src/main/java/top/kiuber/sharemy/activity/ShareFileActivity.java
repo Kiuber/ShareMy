@@ -157,6 +157,7 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
             startActivityForResult(
                     Intent.createChooser(mIntent, "选择一个文件"),
                     FILE_SELECT_CODE);
+
         } catch (android.content.ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog
             AppTools.myToast(getApplicationContext(), "请安装文件管理器", 1);

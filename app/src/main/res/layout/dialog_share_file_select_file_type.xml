@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/rg_dialog_share_file_select_file_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rb_dialog_share_file_select_file_type_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/category_file_icon_music_phone_normal"
+            android:drawablePadding="@dimen/normal_space"
+            android:padding="@dimen/normal_space" />
+
+        <RadioButton
+            android:id="@+id/rb_dialog_share_file_select_file_type_apk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/category_file_icon_apk_phone_normal"
+            android:drawablePadding="@dimen/normal_space"
+            android:padding="@dimen/normal_space" />
+
+        <RadioButton
+            android:id="@+id/rb_dialog_share_file_select_file_type_pic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/category_file_icon_pic_phone_normal"
+            android:drawablePadding="@dimen/normal_space"
+            android:padding="@dimen/normal_space" />
+
+        <RadioButton
+            android:id="@+id/rb_dialog_share_file_select_file_type_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/category_file_icon_video_phone_normal"
+            android:drawablePadding="@dimen/normal_space"
+            android:padding="@dimen/normal_space" />
+
+        <RadioButton
+            android:id="@+id/rb_dialog_share_file_select_file_type_zip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/category_file_icon_zip_phone_normal"
+            android:drawablePadding="@dimen/normal_space"
+            android:padding="@dimen/normal_space" />
+
+        <RadioButton
+            android:id="@+id/rb_dialog_share_file_select_file_type_doc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/category_file_icon_doc_phone_normal"
+            android:drawablePadding="@dimen/normal_space"
+            android:padding="@dimen/normal_space" />
+
+        <RadioButton
+            android:id="@+id/rb_dialog_share_file_select_file_type_fav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/category_file_icon_fav_phone_normal"
+            android:drawablePadding="@dimen/normal_space"
+            android:padding="@dimen/normal_space" />
+    </RadioGroup>
+</LinearLayout>

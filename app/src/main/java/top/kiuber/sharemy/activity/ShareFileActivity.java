@@ -1,6 +1,5 @@
 package top.kiuber.sharemy.activity;
 
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -207,32 +206,28 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void shareStart() {
-
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("正在上传文件\n点击空白处或者返回键可以后台上传");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.show();
         final BmobFile bmobFile = new BmobFile(new File(mEtShareFilePath
                 .getText().toString()));
-        bmobFile.uploadblock(this, new UploadFileListener() {
+        bmobFile.uploadblock(ShareFileActivity.this, new UploadFileListener() {
             @Override
             public void onSuccess() {
-                saveFileInformation(
-                        bmobFile.getFileUrl(getApplicationContext()),
-                        bmobFile.getFilename(), progressDialog,
-                        mEtShareFilePath.getText().toString());
+                saveFileInformation(bmobFile.getFileUrl(ShareFileActivity.this),bmobFile.getFilename(),progressDialog,mEtShareFilePath.getText().toString());
+
             }
 
             @Override
-            public void onProgress(Integer arg0) {
-                progressDialog.setProgress(arg0);
+            public void onProgress(Integer value) {
+                super.onProgress(value);
+                progressDialog.setProgress(value);
             }
 
             @Override
-            public void onFailure(int arg0, String arg1) {
-                AppTools.myToast(getApplicationContext(), arg1, 1);
-                progressDialog.dismiss();
-                Log.d("arg1", arg1);
+            public void onFailure(int i, String s) {
+                AppTools.myToast(ShareFileActivity.this, s, 1);
             }
         });
     }
@@ -260,23 +255,18 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
     public void saveFileInformation(String fileUrl, String fileName,
                                     final ProgressDialog progressialog, String path) {
         final ShareFiles shareFiles = new ShareFiles();
-        shareFiles.setUser_object_id(SharedUtils.getSharePreference(
-                getApplicationContext(), "user_information",
-                Context.MODE_PRIVATE, "ObjectId"));
-        shareFiles.setUser_by(SharedUtils.getSharePreference(
-                getApplicationContext(), "user_information",
-                Context.MODE_PRIVATE, "user_name"));
+        shareFiles.setUser_object_id(SharedUtils.getUserInformation(getApplicationContext(), "ObjectId"));
+        shareFiles.setUser_by(SharedUtils.getUserInformation(getApplicationContext(), "user_name"));
         shareFiles.setUser_upload_file(fileUrl);
         shareFiles.setShare_title(mEtShareFileTitle.getText().toString());
-        shareFiles.setShare_content(mEtShareFileContent.getText().toString());
         shareFiles.setShare_name(fileName);
-        shareFiles.setShare_user_location(SharedUtils.getSharePreference(
-                getApplicationContext(), "others", Context.MODE_PRIVATE,
-                "user_location"));
+
         shareFiles.setShare_file_size(FormetFileSize(new File(path)));
         shareFiles.setShare_file_download_num("0");
+        shareFiles.setShare_file_share_num("0");
 
         isShareFileType(shareFiles, calShareFileSuffix(mEtShareFilePath.getText().toString()));
+
         shareFiles.save(getApplicationContext(), new SaveListener() {
 
             @Override
@@ -289,9 +279,7 @@ public class ShareFileActivity extends AppCompatActivity implements View.OnClick
 
             @Override
             public void onFailure(int arg0, String arg1) {
-                AppTools.myToast(getApplicationContext(),
-                        "文件信息保存失败，但是文件已经上传至服务器，可能会在下个版本开放秒传，错误码：" + arg1
-                                + "\n请把错误码告诉开发者", 1);
+                AppTools.myToast(getApplicationContext(), arg1, 1);
             }
         });
     }

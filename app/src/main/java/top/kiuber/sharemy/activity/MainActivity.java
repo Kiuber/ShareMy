@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,10 +22,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
@@ -56,7 +61,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ImageView imageView = new ImageView(this);
+        imageView.setBackgroundResource(R.drawable.first);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setConView1();
+            }
+        }, 3000);
+        setContentView(imageView);
+    }
+
+    private void setConView1(){
+        String libName = "bmob"; // 库名, 注意没有前缀lib和后缀.so
+        System.loadLibrary(libName);
+
         setContentView(R.layout.activity_main);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -235,12 +256,10 @@ public class MainActivity extends AppCompatActivity
             }
 
         } else if (id == R.id.nav_share) {
-            AppTools.myToast(MainActivity.this, getString(R.string.share_toast_text), Toast.LENGTH_SHORT);
-            new showLoading(MainActivity.this).showLoadingDialog();
+            new showLoading(MainActivity.this).showLoadingDialog(getString(R.string.share_toast_text));
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_extra_content));
-            startActivity(intent.createChooser(intent, getString(R.string.share_choose_title)));
         } else if (id == R.id.nav_login_out) {
             AppTools.exitLogin(this);
             mUserLoginStatus = false;
@@ -253,7 +272,7 @@ public class MainActivity extends AppCompatActivity
 
     private void changePwd(final Dialog dialog, final String strOldPwd, final String strNewPwd) {
         showLoading showLoading = new showLoading(MainActivity.this);
-        final Dialog dialog1 = showLoading.showLoadingDialog();
+        final Dialog dialog1 = showLoading.showLoadingDialog("正在修改");
 
         BmobQuery<User> userBmobQuery = new BmobQuery<>();
         final String objectId = SharedUtils.getUserInformation(MainActivity.this, "ObjectId");
@@ -312,7 +331,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 final String mStrNewName = mTilNewName.getEditText().getText().toString();
                 showLoading showLoading = new showLoading(MainActivity.this);
-                final Dialog dialog1 = showLoading.showLoadingDialog();
+                final Dialog dialog1 = showLoading.showLoadingDialog("正在修改昵称");
 
                 User user = new User();
                 user.setUser_name(mStrNewName);

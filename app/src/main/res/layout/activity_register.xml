@@ -49,12 +49,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/normal_space"
-            android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQSTUVWXYZ"
-            android:drawableLeft="@drawable/ic_stay_primary_portrait_black_24dp"
+            android:drawableLeft="@drawable/ic_wb_sunny_black_24dp"
             android:drawablePadding="@dimen/normal_space"
-            android:drawableStart="@drawable/ic_stay_primary_portrait_black_24dp"
+            android:drawableStart="@drawable/ic_wb_sunny_black_24dp"
             android:hint="请输入密码"
-            android:inputType="phone"
+            android:inputType="textPassword"
             android:singleLine="true"
             android:visibility="gone" />
 
@@ -63,12 +62,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/normal_space"
-            android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQSTUVWXYZ"
-            android:drawableLeft="@drawable/ic_stay_primary_portrait_black_24dp"
+            android:drawableLeft="@drawable/ic_wb_sunny_black_24dp"
             android:drawablePadding="@dimen/normal_space"
-            android:drawableStart="@drawable/ic_stay_primary_portrait_black_24dp"
+            android:drawableStart="@drawable/ic_wb_sunny_black_24dp"
             android:hint="请再次输入密码"
-            android:inputType="phone"
+            android:inputType="textPassword"
             android:singleLine="true"
             android:visibility="gone" />
 

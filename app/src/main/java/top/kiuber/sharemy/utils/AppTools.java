@@ -8,18 +8,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Random;
 
 import top.kiuber.sharemy.R;
 import top.kiuber.sharemy.fragments.FragmentApk;
@@ -250,16 +257,21 @@ public class AppTools {
         });
     }
 
-    private class CustomAdapter extends FragmentPagerAdapter {
+    private class CustomAdapter extends FragmentStatePagerAdapter {
         private String fragments[] = {"音乐", "安装包", "图片", "视频", "压缩包", "文档", "其他"};
+        private FragmentManager fragmentManager;
 
         public CustomAdapter(FragmentManager supportFragmentManager, Context applicationContext) {
             super(supportFragmentManager);
+            this.fragmentManager = supportFragmentManager;
+
         }
 
 
         @Override
         public Fragment getItem(int position) {
+            Random random = new Random();
+            int a = random.nextInt(6);
             switch (position) {
                 case 0:
                     return new FragmentMusic();
@@ -288,6 +300,16 @@ public class AppTools {
         @Override
         public CharSequence getPageTitle(int position) {
             return fragments[position];
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            return super.instantiateItem(container, position);
         }
     }
 

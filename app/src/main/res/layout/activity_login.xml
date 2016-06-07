@@ -34,7 +34,9 @@
                 android:id="@+id/tel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:drawableLeft="@drawable/ic_stay_primary_portrait_black_24dp"
+                android:drawablePadding="@dimen/normal_space"
+                android:drawableStart="@drawable/ic_stay_primary_portrait_black_24dp"
                 android:hint="手机号" />
         </android.support.design.widget.TextInputLayout>
 
@@ -47,7 +49,11 @@
                 android:id="@+id/pwd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="密码" />
+                android:drawableLeft="@drawable/ic_wb_sunny_black_24dp"
+                android:drawablePadding="@dimen/normal_space"
+                android:drawableStart="@drawable/ic_wb_sunny_black_24dp"
+                android:hint="密码"
+                android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
 

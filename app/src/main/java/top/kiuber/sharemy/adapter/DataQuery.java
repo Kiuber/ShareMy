@@ -27,7 +27,7 @@ public class DataQuery {
         m_listView = view;
     }
 
-    public void bmobQuery(final Dialog dialog) {
+    public void bmobQuery() {
 
 
         BmobQuery<ShareFiles> query = new BmobQuery<>();
@@ -36,7 +36,7 @@ public class DataQuery {
         query.findObjects(mContext, new FindListener<ShareFiles>() {
             @Override
             public void onSuccess(List<ShareFiles> list) {
-                dialog.dismiss();
+                //dialog.dismiss();
                 if (!(list == null)) {
                     m_listView.setAdapter(new ViewPagerListViewAdapter(mContext, list.size(), list));
                 }
@@ -45,7 +45,7 @@ public class DataQuery {
 
             @Override
             public void onError(int i, String s) {
-                dialog.dismiss();
+                //dialog.dismiss();
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(s);
                 builder.setPositiveButton("重试", new DialogInterface.OnClickListener() {

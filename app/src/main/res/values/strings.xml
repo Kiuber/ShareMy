@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ShareMy</string>
+    <string name="app_name">Share晒</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -27,8 +27,8 @@
     <string name="is_login_message">您还没登录，是否现在登录？</string>
     <string name="update_log_title">更新日志</string>
     <string name="update_log_positive">确定</string>
-    <string name="about_title">ShareMy--分享我的分享</string>
-    <string name="about_message">Develop：Kiuber\n\nMail：kiuber1127@gmail.com\n\nSina：Kiuber_Z</string>
+    <string name="about_title">悦享越快乐</string>
+    <string name="about_message">UI：HanBigBoss\n\nDevelop：Kiuber\n\neMail：kiuber1127@gmail.com</string>
     <string name="about_positive">确定</string>
     <string name="uninstall_old_version_title">提示</string>
     <string name="uninstall_old_version_message">为了更好的用户体验，我们重写了大部分代码，建议您卸载旧版本，点击即可跳转到卸载旧版本界面</string>

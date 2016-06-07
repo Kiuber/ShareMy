@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +28,10 @@ public class FragmentMusic extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.lv_vp);
         DataQuery dataQuery = new DataQuery(getContext(), "音频", listView);
         try {
-            showLoading showLoading =new showLoading(getContext());
-            Dialog dialog = showLoading.showLoadingDialog();
+//            showLoading showLoading = new showLoading(getContext());
+//            Dialog dialog = showLoading.showLoadingDialog();
 
-            dataQuery.bmobQuery(dialog);
+            dataQuery.bmobQuery();
         } catch (Exception e) {
             e.printStackTrace();
         }

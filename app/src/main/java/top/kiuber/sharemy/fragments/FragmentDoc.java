@@ -27,10 +27,10 @@ public class FragmentDoc extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.lv_vp);
         DataQuery dataQuery = new DataQuery(getContext(), "文档", listView);
         try {
-            showLoading showLoading =new showLoading(getContext());
-            Dialog dialog = showLoading.showLoadingDialog();
+//            showLoading showLoading = new showLoading(getContext());
+//            Dialog dialog = showLoading.showLoadingDialog();
 
-            dataQuery.bmobQuery(dialog);
+            dataQuery.bmobQuery();
         } catch (Exception e) {
             e.printStackTrace();
         }

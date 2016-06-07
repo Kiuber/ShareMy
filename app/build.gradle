@@ -3,10 +3,13 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "24.0.0 rc3"
+
+    useLibrary 'org.apache.http.legacy'
+
     defaultConfig {
         applicationId "top.kiuber.sharemy"
-        minSdkVersion 14
-        targetSdkVersion 23
+        minSdkVersion 15
+        targetSdkVersion 19
         versionCode 2
         versionName "1.5"
     }
@@ -19,8 +22,8 @@ android {
     productFlavors {
     }
 }
-repositories{
-    flatDir{
+repositories {
+    flatDir {
         dirs 'libs' //就是你放aar的目录地址
     }
 }
@@ -34,8 +37,9 @@ dependencies {
     compile files('libs/filechoose.jar')
     compile files('libs/MobCommons-2016.0303.1229.jar')
     compile files('libs/MobTools-2016.0303.1229.jar')
-    compile files('libs/BmobSDK_V3.4.7_0518.jar')
-    compile files('libs/okhttp-3.2.0.jar')
-    compile files('libs/okio-1.7.0.jar')
-    compile files('libs/org.apache.http.legacy.jar')
+
+    compile 'cn.bmob.android:bmob-sdk:3.4.7'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okio:okio:1.7.0'
+    compile(name: 'besselloadinglib', ext: 'aar')
 }

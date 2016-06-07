@@ -32,6 +32,17 @@ public class ShareFiles extends BmobObject {
     String share_file_size;
     String Share_file_download_num;
 
+    public void setShare_file_share_num(String share_file_share_num) {
+        Share_file_share_num = share_file_share_num;
+    }
+
+    public String getShare_file_share_num() {
+
+        return Share_file_share_num;
+    }
+
+    String Share_file_share_num;
+
     public String getShare_user_location() {
         return share_user_location;
     }

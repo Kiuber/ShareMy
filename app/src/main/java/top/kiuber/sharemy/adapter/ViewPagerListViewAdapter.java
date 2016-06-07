@@ -70,24 +70,42 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
             viewHolder.mTvShareFileUserBy = (TextView) convertView.findViewById(R.id.tv_sharefile_user_by);
             viewHolder.mTvShareFileTime = (TextView) convertView.findViewById(R.id.tv_sharefile_time);
             viewHolder.mTvShareFileTitle = (TextView) convertView.findViewById(R.id.tv_sharefile_title);
-            viewHolder.mTvShareFileSizeAndDownloadNum = (TextView) convertView.findViewById(R.id.tv_sharefile_download_size_and_num);
+            viewHolder.mTvShareFiledDownloadNum = (TextView) convertView.findViewById(R.id.tv_sharefile_download_num);
             viewHolder.mIvShareFileType = (ImageView) convertView.findViewById(R.id.iv_sharefile_type);
+            viewHolder.mIvShareFileShareNum = (TextView) convertView.findViewById(R.id.tv_sharefile_share);
+            viewHolder.mIvShareFileSize = (TextView) convertView.findViewById(R.id.tv_sharefile_file_size);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        ShareFiles shareFiles = getItem(position);
+        final ShareFiles shareFiles = getItem(position);
 
 //        viewHolder.mTvShareFileUserBy.setText(shareFiles.getUser_by());
         queryShareBy(viewHolder.mTvShareFileUserBy, shareFiles.getUser_object_id());
 
         viewHolder.mTvShareFileTime.setText(shareFiles.getCreatedAt());
         viewHolder.mTvShareFileTitle.setText(shareFiles.getShare_title());
-        viewHolder.mTvShareFileSizeAndDownloadNum.setText(shareFiles.getShare_file_download_num());
+        viewHolder.mTvShareFiledDownloadNum.setText(shareFiles.getShare_file_download_num());
+        viewHolder.mIvShareFileSize.setText(shareFiles.getShare_file_size());
+        viewHolder.mIvShareFileShareNum.setText(shareFiles.getShare_file_share_num());
 
         isFileType(shareFiles, viewHolder.mIvShareFileType);
 
         convertViewSetOnClick(convertView, viewHolder, shareFiles);
+
+        final ViewHolder finalViewHolder1 = viewHolder;
+        final ViewHolder finalViewHolder = viewHolder;
+        viewHolder.mIvShareFileShareNum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, finalViewHolder1.mTvShareFileTitle.getText().toString()+"\n"+ shareFiles.getUser_upload_file());
+               mContext.startActivity(intent.createChooser(intent,finalViewHolder1.mTvShareFileTitle.getText().toString()));
+                updateCloudShareNumDaDta(shareFiles, finalViewHolder);
+                finalViewHolder.mIvShareFileShareNum.setText(Integer.parseInt(finalViewHolder.mIvShareFileShareNum.getText().toString())+1+"");
+            }
+        });
 
         return convertView;
     }
@@ -96,8 +114,10 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
         public TextView mTvShareFileUserBy;
         public TextView mTvShareFileTime;
         public TextView mTvShareFileTitle;
-        public TextView mTvShareFileSizeAndDownloadNum;
+        public TextView mTvShareFiledDownloadNum;
         public ImageView mIvShareFileType;
+        public TextView mIvShareFileShareNum;
+        public TextView mIvShareFileSize;
     }
 
     private void isFileType(ShareFiles shareFiles, ImageView imageView) {
@@ -167,6 +187,7 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         downloadShareFile(viewHolder, shareFiles);
+
                     }
                 });
 
@@ -205,26 +226,49 @@ public class ViewPagerListViewAdapter extends BaseAdapter {
             // 没有记录
             request.setDestinationInExternalPublicDir("ShareMy", shareFiles.getShare_name());
             downloadId = downloadManager.enqueue(request);
+            updateCloudDownloadNumDaDta(shareFiles,viewHolder);
+            viewHolder.mTvShareFiledDownloadNum.setText(Integer.parseInt(viewHolder.mTvShareFiledDownloadNum.getText().toString())+1+"");
 
-            shareFiles
-                    .setShare_file_download_num((Integer.parseInt(viewHolder.mTvShareFileSizeAndDownloadNum.getText().toString()) + 1) + "");
-            shareFiles.update(mContext, shareFiles.getObjectId(), new UpdateListener() {
 
-                @Override
-                public void onSuccess() {
-                    // TODO Auto-generated method stub
-                }
-
-                @Override
-                public void onFailure(int arg0, String arg1) {
-                    AppTools.myToast(mContext, arg1, 1);
-                }
-            });
             AppTools.myToast(mContext, "正在下载" + viewHolder.mTvShareFileTitle.getText().toString(), 1);
         } else {
             Toast.makeText(mContext, "已经加入到下载队列", Toast.LENGTH_SHORT).show();
         }
-
     }
+
+    private void updateCloudDownloadNumDaDta(ShareFiles shareFiles,ViewHolder viewHolder){
+        shareFiles
+                .setShare_file_download_num((Integer.parseInt(viewHolder.mTvShareFiledDownloadNum.getText().toString()) + 1) + "");
+        shareFiles.update(mContext, shareFiles.getObjectId(), new UpdateListener() {
+
+            @Override
+            public void onSuccess() {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onFailure(int arg0, String arg1) {
+                AppTools.myToast(mContext, arg1, 1);
+            }
+        });
+    }
+
+    private void updateCloudShareNumDaDta(ShareFiles shareFiles, ViewHolder viewHolder) {
+        shareFiles
+                .setShare_file_share_num((Integer.parseInt(viewHolder.mIvShareFileShareNum.getText().toString()) + 1) + "");
+        shareFiles.update(mContext, shareFiles.getObjectId(), new UpdateListener() {
+
+            @Override
+            public void onSuccess() {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onFailure(int arg0, String arg1) {
+                AppTools.myToast(mContext, arg1, 1);
+            }
+        });
+    }
+
 }
 
